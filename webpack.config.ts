@@ -20,7 +20,11 @@ module.exports = {
         use: "ts-loader",
         exclude: /node_modules/,
       },
-    ],
+      {
+        test: /\.(scss|css)$/,
+        use: ['style-loader', 'css-loader']
+      },
+    ],     
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -32,5 +36,6 @@ module.exports = {
     contentBase: path.join(__dirname, "build"),
     compress: true,
     port: 8080,
+    historyApiFallback: true
   },
 }
