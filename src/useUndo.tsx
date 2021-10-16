@@ -1,20 +1,17 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 
-export function useUndo(initialPresent: any) {
-  const [state, setState] = React.useState({
-    past: [],
-    present: initialPresent,
-    future: [],
-  })
+const UNDO = 'UNDO'
+const REDO = 'REDO'
+const SET = 'SET'
+const RESET = 'RESET'
 
-  const canUndo = state.past.length !== 0
-  const canRedo = state.future.length !== 0
+function undoReducer(state: any, action: any) {
+  const { past, present, future } = state
+  const { type, newPresent } = action
 
-  const undo = React.useCallback(() => {
-    setState(currentState => {
-      const { past, present, future } = currentState
-
-      if (past.length === 0) return currentState
+  switch (type) {
+    case UNDO: {
+      if (past.length === 0) return state
 
       const previous = past[past.length - 1]
       const newPast = past.slice(0, past.length - 1)
@@ -24,14 +21,10 @@ export function useUndo(initialPresent: any) {
         present: previous,
         future: [present, ...future],
       }
-    })
-  }, [])
+    }
 
-  const redo = React.useCallback(() => {
-    setState(currentState => {
-      const { past, present, future } = currentState
-
-      if (future.length === 0) return currentState
+    case REDO: {
+      if (future.length === 0) return state
 
       const next = future[0]
       const newFuture = future.slice(1)
@@ -41,35 +34,48 @@ export function useUndo(initialPresent: any) {
         present: next,
         future: newFuture,
       }
-    })
-  }, [])
+    }
 
-  console.log(`useUndo`, state.present, state.past, state.future);
+    case SET: {
+      if (newPresent === present) return state
 
+      return {
+        past: [...past, present],
+        present: newPresent,
+        future: [],
+      }
+    }
 
+    case RESET: {
+      return {
+        past: [],
+        present: newPresent,
+        future: [],
+      }
+    }
+  }
+}
+
+export function useUndo(initialPresent: any) {
+  const [state, dispatch] = React.useReducer(undoReducer, {
+    past: [],
+    present: initialPresent,
+    future: [],
+  })
+
+  const canUndo = state.past.length !== 0
+  const canRedo = state.future.length !== 0
+
+  const undo = React.useCallback(() => dispatch({ type: UNDO }), [])
+  const redo = React.useCallback(() => dispatch({ type: REDO }), [])
   const set = React.useCallback(
-    newPresent => {
-      console.log(`const set = React.useCallback(`, newPresent);
-
-      setState(currentState => {
-        const { present, past } = currentState
-        if (newPresent === present) return currentState
-        return {
-          past: [...past, present],
-          present: newPresent,
-          future: [],
-        }
-      })
-    }, []
+    newPresent => dispatch({ type: SET, newPresent }),
+    [],
   )
-
-  const reset = React.useCallback(newPresent => {
-    setState(() => ({
-      past: [],
-      present: newPresent,
-      future: [],
-    }))
-  }, [])
+  const reset = React.useCallback(
+    newPresent => dispatch({ type: RESET, newPresent }),
+    [],
+  )
 
   return [
     state,
