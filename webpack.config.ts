@@ -1,11 +1,22 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require("path");
+const webpack = require('webpack');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');    
+
+let plugins = [
+  new HtmlWebpackPlugin({
+    hot: true,
+    template: "./public/index.html",
+  }),
+  new BundleAnalyzerPlugin()
+];
 
 module.exports = {
   mode: 'development',
   output: { // indicates where to put the result after bundling.
     path: path.resolve(__dirname, "build"),
     filename: "bundle.js",
+    publicPath: '/',
   },
   entry: { // the entrypoint which webpack will come to here firstly to bundle code.
     index: path.join(__dirname, "src/index.tsx"),
@@ -26,16 +37,12 @@ module.exports = {
       },
     ],     
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      hot: true,
-      template: "./public/index.html",
-    }),
-  ],
+  plugins: plugins,
   devServer: {
     contentBase: path.join(__dirname, "build"),
     compress: true,
     port: 8080,
     historyApiFallback: true
   },
+  devtool: 'source-map'
 }

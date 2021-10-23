@@ -1,4 +1,5 @@
 import React from "react";
+import { Container } from "react-bootstrap";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import NavRoutes, { ICustomNav } from "./common/components/NavRoutes";
@@ -29,23 +30,25 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <main>
+        <Container>
           <NavRoutes tabs={MainTabs} />
-          <Switch>
-            <Route exact path="/project-list">
-              <ProjectList />
-            </Route>
-            <Route path="/project-list/:id">
-              <ProjectDetail />
-            </Route>
-            <Route path="/home" exact>
-              Home
-            </Route>
-            <Route path="/">
-              <Redirect to="/home" />
-            </Route>
-          </Switch>
-        </main>
+          <Container className="p-5">
+            <Switch>
+              <Route exact path="/project-list">
+                <ProjectList />
+              </Route>
+              <Route path="/project-list/:id">
+                <ProjectDetail />
+              </Route>
+              <Route path="/home" exact>
+                Home
+              </Route>
+              <Route path="/">
+                <Redirect to="/home" />
+              </Route>
+            </Switch>
+          </Container>
+        </Container>
       </BrowserRouter>
     </QueryClientProvider>
   );

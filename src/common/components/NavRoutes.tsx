@@ -15,7 +15,7 @@ const NavRoutes = (props: INavRoutesProps) => {
   const { tabs } = props;
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
+    <Navbar bg="dark" variant="dark" expand="sm">
       <Nav className="me-auto">
         {
           tabs.map(tab =>
