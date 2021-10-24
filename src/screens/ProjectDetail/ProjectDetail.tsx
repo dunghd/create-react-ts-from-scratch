@@ -1,89 +1,55 @@
-import { ErrorMessage, Form, Formik, useField } from "formik";
+import { Form, Formik } from "formik";
 import React from "react";
-import { Container, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
+import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import * as Yup from "yup";
 import CommonSpinner from "../../common/components/CommonSpinner";
 import FormikDatePicker from "../../common/components/controls/FormikDatePicker";
 import FormikTextInput from "../../common/components/controls/FormikTextInput";
 import { IUrlParams } from "../../common/interfaces/IUrlParams";
+import { GET_PROJECT_BY_ID_KEY } from "../../common/QueryKeys";
 import useAddProject from "../../hooks/useAddProject";
+import useDeleteProject from "../../hooks/useDeleteProject";
 import useProjectById from "../../hooks/useProjectById";
 import useUpdateProject from "../../hooks/useUpdateProject";
-import { IProject } from "../../models/IProject";
-
-const MyCheckbox = ({ children, ...props }: any) => {
-  const [field, meta] = useField({ ...props, type: "checkbox" });
-
-  return (
-    <div>
-      <label className="form-check-label">
-        <input
-          className="form-check-input"
-          type="checkbox"
-          {...field}
-          {...props}
-        />
-        {children}
-      </label>
-      <ErrorMessage name={props.name} component="div" className="text-danger" />
-    </div>
-  );
-};
-
-const MySelect = ({ label, ...props }: any) => {
-  const [field, meta] = useField(props);
-
-  return (
-    <div>
-      <label htmlFor={props.id || props.name}>{label}</label>
-      <select {...field} {...props} />
-      <ErrorMessage name={props.name} component="div" className="text-danger" />
-    </div>
-  );
-};
+import ProjectValidationSchema from "./ProjectValidationSchema";
 
 const ProjectDetail = () => {
   const { id: prjId } = useParams<IUrlParams>();
-  let data = {} as IProject,
-    isLoading = false;
 
-  if (prjId) {
-    ({ data, isLoading } = useProjectById(prjId));
-  }
+  const { data, isLoading } = useProjectById(prjId);
 
+  const queryClient = useQueryClient();
   const addPrjMutation = useAddProject();
   const updatePrjMutation = useUpdateProject();
+  const deletePrjMutation = useDeleteProject();
+
+  console.log(data);
 
   return (
     <Container>
       <h3 className="mb-3">{prjId ? "Update Project" : "New Project"}</h3>
-      {isLoading ? (
+      {isLoading ||
+      addPrjMutation.isLoading ||
+      updatePrjMutation.isLoading ||
+      deletePrjMutation.isLoading ? (
         <CommonSpinner />
       ) : (
         <Formik
           initialValues={data}
-          validationSchema={Yup.object({
-            number: Yup.string()
-              .max(15, "Must be 15 characters or less")
-              .required("Required"),
-            name: Yup.string()
-              .max(30, "Must be 20 characters or less")
-              .required("Required"),
-            customer: Yup.string()
-              .max(30, "Must be 20 characters or less")
-              .required("Required"),
-          })}
+          validationSchema={ProjectValidationSchema}
           onSubmit={(values) => {
             if (prjId) {
               updatePrjMutation
                 .mutateAsync(values)
-                .then((data) => console.log(data));
+                .then(() =>
+                  queryClient.invalidateQueries(
+                    `${GET_PROJECT_BY_ID_KEY}-${prjId}`
+                  )
+                );
             } else {
-              addPrjMutation
-                .mutateAsync(values)
-                .then((data) => console.log(data));
+              addPrjMutation.mutateAsync(values);
             }
           }}
         >
@@ -99,11 +65,7 @@ const ProjectDetail = () => {
               <FormikTextInput id="name" label="Project Name" name="name" />
             </Row>
             <Row className="mb-3">
-              <FormikTextInput
-                id="customer"
-                label="Email Address"
-                name="customer"
-              />
+              <FormikTextInput id="customer" label="	Customer" name="customer" />
             </Row>
             <Row className="mb-3">
               <FormikDatePicker name="startDate" label="Start Date" />
@@ -111,7 +73,24 @@ const ProjectDetail = () => {
             <Row className="mb-3">
               <FormikDatePicker name="endDate" label="End Date" />
             </Row>
-            <Button type="submit">Submit</Button>
+            <Row className="mb-3">
+              <Col></Col>
+              <Button className="col" type="submit">
+                Submit
+              </Button>
+              {prjId && (
+                <>
+                  <Col></Col>
+                  <Button
+                    className="col"
+                    onClick={() => deletePrjMutation.mutate(prjId)}
+                  >
+                    Delete
+                  </Button>
+                </>
+              )}
+              <Col></Col>
+            </Row>
           </Form>
         </Formik>
       )}

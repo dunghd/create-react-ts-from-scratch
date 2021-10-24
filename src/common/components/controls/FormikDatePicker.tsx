@@ -11,6 +11,7 @@ type FormikDatePickerProps = {
 const FormikDatePicker = (props: FormikDatePickerProps) => {
   const [field] = useField(props);
   const { setFieldValue } = useFormikContext();
+
   const selectedDate = field.value ? new Date(field.value) : new Date();
 
   return (

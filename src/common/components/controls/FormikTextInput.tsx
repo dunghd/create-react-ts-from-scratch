@@ -15,7 +15,12 @@ const FormikTextInput = ({ label, ...props }: FormikTextInputProps) => {
       <label htmlFor={props.id || props.name} className="mb-1">
         {label}
       </label>
-      <input className="form-control" {...field} {...props} />
+      <input
+        className="form-control"
+        {...field}
+        {...props}
+        value={field.value || ""}
+      />
       <ErrorMessage name={props.name} component="div" className="text-danger" />
     </div>
   );

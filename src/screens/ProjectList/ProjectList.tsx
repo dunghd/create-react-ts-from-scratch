@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import { useHistory } from "react-router-dom";
 import CommonSpinner from "../../common/components/CommonSpinner";
@@ -83,16 +83,16 @@ const ProjectList = (): JSX.Element => {
   return isLoading ? (
     <CommonSpinner />
   ) : (
-    <div style={{ height: "70vh", width: "100%" }}>
-      <div style={{ display: "flex", height: "100%" }}>
+    <Container>
+      <Container>
         <div style={{ flexGrow: 1 }}>
           <BootstrapTable keyField="id" data={data || []} columns={columns} />
         </div>
-      </div>
+      </Container>
       <Button variant="primary" onClick={() => history.push("/new-project")}>
         New Project
       </Button>
-    </div>
+    </Container>
   );
 };
 
