@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "react-bootstrap";
 import BootstrapTable from "react-bootstrap-table-next";
 import { useHistory } from "react-router-dom";
 import CommonSpinner from "../../common/components/CommonSpinner";
@@ -88,6 +89,9 @@ const ProjectList = (): JSX.Element => {
           <BootstrapTable keyField="id" data={data || []} columns={columns} />
         </div>
       </div>
+      <Button variant="primary" onClick={() => history.push("/new-project")}>
+        New Project
+      </Button>
     </div>
   );
 };

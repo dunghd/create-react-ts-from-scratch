@@ -1,13 +1,16 @@
 import { ErrorMessage, Form, Formik, useField } from "formik";
 import React from "react";
-import { Row } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 import CommonSpinner from "../../common/components/CommonSpinner";
 import FormikDatePicker from "../../common/components/controls/FormikDatePicker";
 import FormikTextInput from "../../common/components/controls/FormikTextInput";
+import { IUrlParams } from "../../common/interfaces/IUrlParams";
+import useAddProject from "../../hooks/useAddProject";
 import useProjectById from "../../hooks/useProjectById";
+import useUpdateProject from "../../hooks/useUpdateProject";
 import { IProject } from "../../models/IProject";
 
 const MyCheckbox = ({ children, ...props }: any) => {
@@ -16,7 +19,12 @@ const MyCheckbox = ({ children, ...props }: any) => {
   return (
     <div>
       <label className="form-check-label">
-        <input className="form-check-input" type="checkbox" {...field} {...props} />
+        <input
+          className="form-check-input"
+          type="checkbox"
+          {...field}
+          {...props}
+        />
         {children}
       </label>
       <ErrorMessage name={props.name} component="div" className="text-danger" />
@@ -37,11 +45,20 @@ const MySelect = ({ label, ...props }: any) => {
 };
 
 const ProjectDetail = () => {
-  const { id } = useParams<any>();
-  const { data = {} as IProject, isLoading } = useProjectById(id);
+  const { id: prjId } = useParams<IUrlParams>();
+  let data = {} as IProject,
+    isLoading = false;
+
+  if (prjId) {
+    ({ data, isLoading } = useProjectById(prjId));
+  }
+
+  const addPrjMutation = useAddProject();
+  const updatePrjMutation = useUpdateProject();
 
   return (
-    <>
+    <Container>
+      <h3 className="mb-3">{prjId ? "Update Project" : "New Project"}</h3>
       {isLoading ? (
         <CommonSpinner />
       ) : (
@@ -52,26 +69,22 @@ const ProjectDetail = () => {
               .max(15, "Must be 15 characters or less")
               .required("Required"),
             name: Yup.string()
-              .max(20, "Must be 20 characters or less")
+              .max(30, "Must be 20 characters or less")
               .required("Required"),
             customer: Yup.string()
-              .max(20, "Must be 20 characters or less")
+              .max(30, "Must be 20 characters or less")
               .required("Required"),
-            // acceptedTerms: Yup.boolean()
-            //   .required("Required")
-            //   .oneOf([true], "You must accept the terms and conditions."),
-            // jobType: Yup.string()
-            //   .oneOf(
-            //     ["designer", "development", "product", "other"],
-            //     "Invalid Job Type"
-            //   )
-            //   .required("Required"),
           })}
-          onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
-              setSubmitting(false);
-            }, 400);
+          onSubmit={(values) => {
+            if (prjId) {
+              updatePrjMutation
+                .mutateAsync(values)
+                .then((data) => console.log(data));
+            } else {
+              addPrjMutation
+                .mutateAsync(values)
+                .then((data) => console.log(data));
+            }
           }}
         >
           <Form className="form-group grid">
@@ -83,11 +96,7 @@ const ProjectDetail = () => {
               />
             </Row>
             <Row className="mb-3">
-              <FormikTextInput
-                id="name"
-                label="Project Name"
-                name="name"
-              />
+              <FormikTextInput id="name" label="Project Name" name="name" />
             </Row>
             <Row className="mb-3">
               <FormikTextInput
@@ -97,28 +106,16 @@ const ProjectDetail = () => {
               />
             </Row>
             <Row className="mb-3">
-              <FormikDatePicker name="startDate" label="Start Date"/>
+              <FormikDatePicker name="startDate" label="Start Date" />
             </Row>
             <Row className="mb-3">
-              <FormikDatePicker name="endDate" label="End Date"/>
+              <FormikDatePicker name="endDate" label="End Date" />
             </Row>
-            {
-              /* <br />
-              <MySelect label="Job Type" name="jobType">
-                <option value="">Select a job type</option>
-                <option value="designer">Designer</option>
-                <option value="development">Developer</option>
-                <option value="product">Product Manager</option>
-                <option value="other">Other</option>
-              </MySelect>
-              <br />*/
-            }
-
             <Button type="submit">Submit</Button>
           </Form>
         </Formik>
       )}
-    </>
+    </Container>
   );
 };
 

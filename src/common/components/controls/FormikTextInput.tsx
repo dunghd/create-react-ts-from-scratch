@@ -1,5 +1,5 @@
-import { ErrorMessage, useField } from 'formik';
-import React from 'react';
+import { ErrorMessage, useField } from "formik";
+import React from "react";
 
 type FormikTextInputProps = {
   id: string;
@@ -12,7 +12,9 @@ const FormikTextInput = ({ label, ...props }: FormikTextInputProps) => {
 
   return (
     <div className="form-group">
-      <label htmlFor={props.id || props.name} className="mb-1">{label}</label>
+      <label htmlFor={props.id || props.name} className="mb-1">
+        {label}
+      </label>
       <input className="form-control" {...field} {...props} />
       <ErrorMessage name={props.name} component="div" className="text-danger" />
     </div>

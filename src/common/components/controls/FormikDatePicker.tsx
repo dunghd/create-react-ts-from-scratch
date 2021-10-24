@@ -11,19 +11,21 @@ type FormikDatePickerProps = {
 const FormikDatePicker = (props: FormikDatePickerProps) => {
   const [field] = useField(props);
   const { setFieldValue } = useFormikContext();
+  const selectedDate = field.value ? new Date(field.value) : new Date();
 
-  console.log(`date 1: `, field.value);
-  console.log(`date 2: `, new Date(field.value));  
-
-  return <div className="form-group">
-    <label htmlFor={props.name} className="mb-1">{props.label}</label>
-    <DatePicker 
-      selected={new Date(field.value)}
-      onSelect={(e) => setFieldValue(props.name, e)}
-      onChange={(e) => setFieldValue(props.name, e)}
-      className="form-control"
-    />
-  </div>;
+  return (
+    <div className="form-group">
+      <label htmlFor={props.name} className="mb-1">
+        {props.label}
+      </label>
+      <DatePicker
+        selected={selectedDate}
+        onSelect={(e) => setFieldValue(props.name, e)}
+        onChange={(e) => setFieldValue(props.name, e)}
+        className="form-control"
+      />
+    </div>
+  );
 };
 
 export default FormikDatePicker;

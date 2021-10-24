@@ -32,12 +32,15 @@ const App = () => {
       <BrowserRouter>
         <Container>
           <NavRoutes tabs={MainTabs} />
-          <Container className="p-5">
+          <Container className="p-3">
             <Switch>
               <Route exact path="/project-list">
                 <ProjectList />
               </Route>
               <Route path="/project-list/:id">
+                <ProjectDetail />
+              </Route>
+              <Route path="/new-project">
                 <ProjectDetail />
               </Route>
               <Route path="/home" exact>
