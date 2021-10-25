@@ -41,6 +41,6 @@
     "analyze": "webpack --profile --json > stats.json",
     "build": "webpack --config ./webpack.config.ts",
     "start": "webpack serve --env development --open",
-    "server": "json-server --watch db.json --port 3001"
+    "server": "json-server --watch db.json --port 3002"
   }
 }

@@ -20,7 +20,6 @@ const ProjectDetail = () => {
 
   const { data, isLoading } = useProjectById(prjId);
 
-  const queryClient = useQueryClient();
   const addPrjMutation = useAddProject();
   const updatePrjMutation = useUpdateProject();
   const deletePrjMutation = useDeleteProject();
@@ -38,16 +37,11 @@ const ProjectDetail = () => {
       ) : (
         <Formik
           initialValues={data}
+          enableReinitialize
           validationSchema={ProjectValidationSchema}
           onSubmit={(values) => {
             if (prjId) {
-              updatePrjMutation
-                .mutateAsync(values)
-                .then(() =>
-                  queryClient.invalidateQueries(
-                    `${GET_PROJECT_BY_ID_KEY}-${prjId}`
-                  )
-                );
+              updatePrjMutation.mutateAsync(values);
             } else {
               addPrjMutation.mutateAsync(values);
             }
