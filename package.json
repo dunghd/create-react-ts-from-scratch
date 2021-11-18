@@ -38,9 +38,10 @@
     "webpack-dev-server": "^3.11.2"
   },
   "scripts": {
-    "analyze": "webpack --profile --json > stats.json",
     "build": "webpack --config ./webpack.config.ts",
     "start": "webpack serve --env development --open",
-    "server": "json-server --watch db.json --port 3002"
+    "server": "json-server --watch db.json --port 3002",
+    "report:build": "webpack --config ./webpack.config.ts --profile --json > stats.json",
+    "report:analyze": "webpack-bundle-analyzer stats.json"
   }
 }

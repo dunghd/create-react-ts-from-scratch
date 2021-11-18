@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Container } from "react-bootstrap";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
 import BootstrapTable from "react-bootstrap-table-next";
 import { useHistory } from "react-router-dom";
 import CommonSpinner from "../../common/components/CommonSpinner";
