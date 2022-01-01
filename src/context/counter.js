@@ -2,24 +2,26 @@ import React from "react";
 
 const CounterContext = React.createContext();
 
+const reducer = (state, action) => {
+  const change = action.step;
+  switch (action.type) {
+    case "increment": {
+      return { ...state, count: state.count + change };
+    }
+    case "decrement": {
+      return { ...state, count: state.count - change };
+    }
+    default: {
+      throw new Error(`Unhandled action type: ${action.type}`);
+    }
+  }
+};
+
 function CounterProvider({ step = 1, initialCount = 0, ...props }) {
-  const [state, dispatch] = React.useReducer(
-    (state, action) => {
-      const change = action.step ?? step;
-      switch (action.type) {
-        case "increment": {
-          return { ...state, count: state.count + change };
-        }
-        case "decrement": {
-          return { ...state, count: state.count - change };
-        }
-        default: {
-          throw new Error(`Unhandled action type: ${action.type}`);
-        }
-      }
-    },
-    { count: initialCount }
-  );
+  const [state, dispatch] = React.useReducer(reducer, {
+    count: initialCount,
+    step: step,
+  });
 
   const value = [state, dispatch];
 
