@@ -1,27 +1,42 @@
 import React from "react";
-import { UserProvider, useUser } from "./context/user-context";
-import UserSettings from "./screens/user-profile";
+import { Switch } from "./switch";
 
-function UserDataDisplay() {
-  const [{ user }] = useUser();
-  return <pre>{JSON.stringify(user, null, 2)}</pre>;
+function Toggle({ children }) {
+  const [on, setOn] = React.useState(false);
+  const toggle = () => setOn(!on);
+
+  // 🐨 replace this with a call to React.Children.map and map each child in
+  // props.children to a clone of that child with the props they need using
+  // React.cloneElement.
+  // 💰 React.Children.map(props.children, child => {/* return child clone here */})
+  // 📜 https://reactjs.org/docs/react-api.html#reactchildren
+  // 📜 https://reactjs.org/docs/react-api.html#cloneelement
+  // return <Switch on={on} onClick={toggle} />;
+
+  return React.Children.map(children, (child) => {
+    return React.cloneElement(child, { on, toggle });
+  });
 }
+
+// 🐨 Flesh out each of these components
+
+// Accepts `on` and `children` props and returns `children` if `on` is true
+const ToggleOn = ({ on, children }) => (on ? children : null);
+
+// Accepts `on` and `children` props and returns `children` if `on` is false
+const ToggleOff = ({ on, children }) => (on ? null : children);
+
+// Accepts `on` and `toggle` props and returns the <Switch /> with those props.
+const ToggleButton = ({ on, toggle }) => <Switch on={on} onClick={toggle} />;
 
 function App() {
   return (
-    <div
-      style={{
-        minHeight: 350,
-        width: 300,
-        backgroundColor: "#ddd",
-        borderRadius: 4,
-        padding: 10,
-      }}
-    >
-      <UserProvider>
-        <UserSettings />
-        <UserDataDisplay />
-      </UserProvider>
+    <div>
+      <Toggle>
+        <ToggleOn>The button is on</ToggleOn>
+        <ToggleOff>The button is off</ToggleOff>
+        <ToggleButton />
+      </Toggle>
     </div>
   );
 }
