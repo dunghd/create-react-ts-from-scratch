@@ -14,7 +14,7 @@ module.exports = {
   },
   resolve: {
     // as we support Typescript, we make sure webpack understand what we expect to do when it see import App from './App'.
-    extensions: [".ts", ".tsx", ".js"],
+    extensions: [".ts", ".tsx", ".js", ".jsx"],
   },
   module: {
     rules: [
@@ -45,6 +45,20 @@ module.exports = {
     contentBase: path.join(__dirname, "build"),
     compress: true,
     port: 8080,
+    stats: {
+      assets: false,
+      children: false,
+      chunks: false,
+      hash: false,
+      modules: false,
+      publicPath: false,
+      timings: false,
+      version: false,
+      warnings: true,
+      colors: {
+        green: "\u001b[32m",
+      },
+    },
   },
   devtool: "eval-source-map",
 };
