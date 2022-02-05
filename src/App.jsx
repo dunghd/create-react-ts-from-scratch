@@ -1,8 +1,9 @@
 import React from "react";
+import Repositories from "./Repositories";
 
 class App extends React.Component {
   render() {
-    return <>DDH 123</>;
+    return <Repositories />;
   }
 }
 
