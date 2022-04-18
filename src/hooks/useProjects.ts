@@ -6,12 +6,16 @@ import { GET_ALL_PROJECT_KEY } from "../common/QueryKeys";
 import { IProject } from "../models/IProject";
 
 export default function useProjects(): UseQueryResult<IProject[], Error> {
-  return useQuery<IProject[], Error>(GET_ALL_PROJECT_KEY, () =>
-    axiosInstance
+  return useQuery<IProject[], Error>(GET_ALL_PROJECT_KEY, async () => {
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000);
+    });
+
+    return axiosInstance
       .get(`${CONFIG.API_BASE_URL}/projects`)
       .then((res: AxiosResponse<IProject[]>) => res.data)
       .catch((err: Error) => {
         throw err;
-      })
-  );
+      });
+  });
 }

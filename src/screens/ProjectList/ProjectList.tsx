@@ -81,6 +81,10 @@ const ProjectList = (): JSX.Element => {
     },
   ];
 
+  React.useEffect(() => {
+    console.log(`Project List Mounted`);
+  }, []);
+
   return isLoading ? (
     <CommonSpinner />
   ) : (

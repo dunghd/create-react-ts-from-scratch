@@ -24,6 +24,8 @@ const ProjectDetail = () => {
 
   console.log(data);
 
+  const htmlTest = '<script>alert("DDH")</script>';
+
   return (
     <Container>
       <h3 className="mb-3">{prjId ? "Update Project" : "New Project"}</h3>
@@ -70,6 +72,7 @@ const ProjectDetail = () => {
               <Button className="col" type="submit">
                 Submit
               </Button>
+              {<span>{htmlTest}</span>}
               {prjId && (
                 <>
                   <Col></Col>
