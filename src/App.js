@@ -1,4 +1,6 @@
 import React from "react";
+// import { UserSettings, UserDataDisplay } from "./screens/user-profile";
+// import { UserProvider } from "./context/user-context";
 import { Switch } from "./switch";
 import { ToggleProvider, useToggle } from "./context/toggle-context";
 
@@ -23,6 +25,21 @@ const CustomButton = (props) => {
 
 function App() {
   return (
+    // <div
+    //   style={{
+    //     minHeight: 350,
+    //     width: 300,
+    //     backgroundColor: "#ddd",
+    //     borderRadius: 4,
+    //     padding: 10,
+    //   }}
+    // >
+    //   <UserProvider>
+    //     <UserSettings />
+    //     <UserDataDisplay />
+    //   </UserProvider>
+    // </div>
+
     <div>
       <ToggleProvider>
         <ToggleButton />
