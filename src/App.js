@@ -4,7 +4,7 @@ import React from "react";
 // import { Switch } from "./switch";
 // import { ToggleProvider, useToggle } from "./context/toggle-context";
 // import { useToggle } from "./context/toggle-context";
-import Toggle from "./screens/toggle";
+import ToggleApp from "./screens/toggle";
 
 // const ToggleButton = (props) => {
 //   const { on, getTogglerProps } = useToggle();
@@ -26,7 +26,7 @@ import Toggle from "./screens/toggle";
 // };
 
 function App() {
-  return <Toggle />;
+  return <ToggleApp />;
 }
 
 export default App;
