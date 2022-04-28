@@ -1,5 +1,7 @@
 import React from "react";
 import warning from "warning";
+import useControlledSwitchWarning from "../hooks/useControlledSwitchWarning";
+import useOnChangeReadOnlyWarning from "../hooks/useOnChangeReadOnlyWarning";
 
 const ToggleContext = React.createContext();
 ToggleContext.displayName = "ToggleContext";
@@ -40,27 +42,19 @@ function useToggle({
   const onIsControlled = controlledOn !== null && controlledOn !== undefined;
   const on = onIsControlled ? controlledOn : state.on;
 
-  const { current: onWasControlled } = React.useRef(onIsControlled);
-
-  React.useEffect(() => {
-    warning(
-      !(onIsControlled && !onWasControlled),
-      `\`useToggle\` is changing from uncontrolled to be controlled. Components should not switch from uncontrolled to controlled (or vice versa). Decide between using a controlled or uncontrolled \`useToggle\` for the lifetime of the component. Check the \`on\` prop.`
+  if (process.env.NODE_ENV !== "production") {
+    useControlledSwitchWarning(controlledOn, "on", "useToggle");
+    useOnChangeReadOnlyWarning(
+      controlledOn,
+      "on",
+      "useToggle",
+      Boolean(onChange),
+      readOnly,
+      "readOnly",
+      "initialOn",
+      "onChange"
     );
-    warning(
-      !(!onIsControlled && onWasControlled),
-      `\`useToggle\` is changing from controlled to be uncontrolled. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled \`useToggle\` for the lifetime of the component. Check the \`on\` prop.`
-    );
-  }, [onIsControlled, onWasControlled]);
-
-  const hasOnChange = Boolean(onChange);
-
-  React.useEffect(() => {
-    warning(
-      !(!hasOnChange && onIsControlled && !readOnly),
-      `An \`on\` prop was provided to useToggle without an \`onChange\` handler. This will render a read-only toggle. If you want it to be mutable, use \`initialOn\`. Otherwise, set either \`onChange\` or \`readOnly\`.`
-    );
-  }, [hasOnChange, onIsControlled, readOnly]);
+  }
 
   // We want to call `onChange` any time we need to make a state change, but we
   // only want to call `dispatch` if `!onIsControlled` (otherwise we could get
