@@ -55,8 +55,12 @@ import { Switch } from "../switch";
 //   );
 // };
 
-function Toggle({ on: controlledOn, onChange }) {
-  const { on, getTogglerProps } = useToggle({ on: controlledOn, onChange });
+function Toggle({ on: controlledOn, onChange, readOnly }) {
+  const { on, getTogglerProps } = useToggle({
+    on: controlledOn,
+    onChange,
+    readOnly,
+  });
   const props = getTogglerProps({ on });
   return <Switch {...props} />;
 }
@@ -81,7 +85,7 @@ function ToggleApp() {
   return (
     <div>
       <div>
-        <Toggle on={bothOn} onChange={handleToggleChange} />
+        <Toggle on={bothOn} readOnly={false} />
         <Toggle on={bothOn} onChange={handleToggleChange} />
       </div>
       {timesClicked > 4 ? (
