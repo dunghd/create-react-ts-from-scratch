@@ -66,7 +66,7 @@ function Toggle({ on: controlledOn, onChange, readOnly }) {
 }
 
 function ToggleApp() {
-  const [bothOn, setBothOn] = React.useState(false);
+  const [bothOn, setBothOn] = React.useState();
   const [timesClicked, setTimesClicked] = React.useState(0);
 
   function handleToggleChange(state, action) {
