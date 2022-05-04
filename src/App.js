@@ -1,7 +1,8 @@
 import React from "react";
+import Artist from "./components/Artist";
 
 function App() {
-  return <div>DDH</div>;
+  return <Artist />;
 }
 
 export default App;
